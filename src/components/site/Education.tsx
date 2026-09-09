@@ -1,0 +1,136 @@
+import { motion } from "motion/react";
+import { GraduationCap, Calendar, Award, MapPin } from "lucide-react";
+
+import { EDUCATION } from "@/lib/portfolio-data";
+import { Reveal, SectionHeading } from "./Reveal";
+
+export function Education() {
+  return (
+    <section id="education" className="relative px-6 py-28 sm:px-10 sm:py-36">
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[35vw] bg-[radial-gradient(circle,_rgba(29,78,216,0.15)_0%,_transparent_70%)] blur-[140px]" />
+
+      <div className="relative mx-auto max-w-[1600px]">
+        <SectionHeading
+          code="06 — Education"
+          title="EDUCATION 🎓"
+          lead="Academic foundation and continuous technical learning in computer applications and software development."
+        />
+
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+          {/* Main Degree Card */}
+          <Reveal>
+            <div className="h-full rounded-2xl border border-primary/25 bg-[#0A192F]/85 p-8 sm:p-12 backdrop-blur-md relative overflow-hidden transition-all duration-500 hover:border-primary/50 shadow-[0_15px_40px_-10px_rgba(2,12,27,0.8)]">
+              <div className="flex items-center gap-3 font-mono text-xs tracking-[0.3em] text-primary uppercase">
+                <GraduationCap className="h-4 w-4" />
+                <span>Undergraduate Degree</span>
+              </div>
+
+              <h3 className="mt-4 font-sans text-2xl font-bold tracking-tight text-white sm:text-3xl lg:text-4xl">
+                {EDUCATION.degree}
+              </h3>
+
+              <div className="mt-3 flex flex-wrap items-center gap-2 text-base text-muted-foreground sm:text-lg">
+                <span className="text-foreground/90 font-medium">{EDUCATION.college}</span>
+                <span>•</span>
+                <span className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-primary" />
+                  {EDUCATION.location}
+                </span>
+              </div>
+
+              <p className="mt-6 leading-relaxed text-muted-foreground">
+                Pursuing rigorous foundational education in computer science, software design, and
+                modern development paradigms. Actively connecting academic coursework with hands-on
+                collaborative web platforms and artificial intelligence projects.
+              </p>
+
+              <div className="mt-8 border-t border-primary/20 pt-6">
+                <div className="font-mono text-xs tracking-wider text-muted-foreground uppercase">
+                  Academic Focus & Coursework
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {[
+                    "Data Structures",
+                    "Java Programming",
+                    "Database Management (SQL)",
+                    "Web Technologies",
+                    "Python",
+                    "Software Engineering",
+                  ].map((item) => (
+                    <span
+                      key={item}
+                      className="rounded-full border border-primary/20 bg-[#020C1B]/80 px-3.5 py-1.5 font-mono text-[11px] tracking-wider text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                    >
+                      {item}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          {/* Key Metrics Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px overflow-hidden rounded-2xl bg-border border border-primary/20">
+            <Reveal delay={0.08} className="h-full">
+              <div className="h-full bg-[#0A192F] p-8 transition-colors duration-500 hover:bg-[#112240]">
+                <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-primary uppercase">
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span>Expected Graduation</span>
+                </div>
+                <div className="mt-4 font-display text-4xl uppercase text-primary drop-shadow-[0_0_20px_rgba(59,130,246,0.45)] sm:text-5xl">
+                  {EDUCATION.graduation}
+                </div>
+                <div className="mt-2 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+                  Final Year BCA Candidate
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.14} className="h-full">
+              <div className="h-full bg-[#0A192F] p-8 transition-colors duration-500 hover:bg-[#112240]">
+                <div className="flex items-center gap-2 font-mono text-[11px] tracking-[0.25em] text-primary uppercase">
+                  <Award className="h-3.5 w-3.5" />
+                  <span>Cumulative CGPA</span>
+                </div>
+                <div className="mt-4 font-display text-4xl text-primary drop-shadow-[0_0_20px_rgba(59,130,246,0.45)] sm:text-5xl">
+                  {EDUCATION.cgpa}
+                </div>
+                <div className="mt-2 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+                  Consistent Academic Performance
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.2} className="h-full">
+              <div className="h-full bg-[#0A192F] p-8 transition-colors duration-500 hover:bg-[#112240]">
+                <div className="font-mono text-[11px] tracking-[0.25em] text-primary uppercase">
+                  Institution
+                </div>
+                <div className="mt-3 font-sans text-lg font-bold text-white sm:text-xl">
+                  Bharatesh College
+                </div>
+                <div className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+                  Belagavi, Karnataka
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.26} className="h-full">
+              <div className="h-full bg-[#0A192F] p-8 transition-colors duration-500 hover:bg-[#112240]">
+                <div className="font-mono text-[11px] tracking-[0.25em] text-primary uppercase">
+                  Career Trajectory
+                </div>
+                <div className="mt-3 font-sans text-lg font-bold text-primary sm:text-xl">
+                  Software Developer
+                </div>
+                <div className="mt-1 font-mono text-[10px] tracking-wider text-muted-foreground uppercase">
+                  Full Stack & AI Ready
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
