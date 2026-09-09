@@ -47,7 +47,7 @@ function Index() {
   }, [ready]);
 
   return (
-    <div className="relative min-h-screen bg-background">
+    <div className="relative min-h-screen bg-background w-full max-w-[100vw] overflow-x-hidden">
       <Preloader onDone={onDone} />
       <Cursor />
       <motion.div
@@ -57,6 +57,7 @@ function Index() {
       <Nav />
 
       <motion.main
+        className="w-full max-w-[100vw] overflow-x-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: ready ? 1 : 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}

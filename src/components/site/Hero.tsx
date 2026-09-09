@@ -6,13 +6,18 @@ import { PERSON } from "@/lib/portfolio-data";
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [deviceTier, setDeviceTier] = useState<"desktop" | "tablet" | "mobile">("desktop");
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    const checkTier = () => {
+      const w = window.innerWidth;
+      if (w >= 1024) setDeviceTier("desktop");
+      else if (w >= 768) setDeviceTier("tablet");
+      else setDeviceTier("mobile");
+    };
+    checkTier();
+    window.addEventListener("resize", checkTier);
+    return () => window.removeEventListener("resize", checkTier);
   }, []);
 
   // Pinned scroll over 300vh
@@ -44,9 +49,7 @@ export function Hero() {
   const nameFrontScale = useTransform(smoothProgress, [0, 0.4], [1, 0.88]);
 
   // Layer 4: Profile Image Cutout Transforms
-  // SCROLL START (0%): Center, large, y: 80px, scale: 1.3
-  // SCROLL MIDDLE (40%): Moving up & left, scale: 1.05
-  // SCROLL END (70%-100%): Positioned on left, scale: 0.85
+  // DESKTOP: Identical original coordinates & timing preserved
   const desktopImageX = useTransform(
     smoothProgress,
     [0, 0.4, 0.75, 1],
@@ -59,61 +62,107 @@ export function Hero() {
     [1.28, 1.05, 0.86, 0.86],
   );
 
+  // TABLET (768px - 1023px): Proportionally adapted
+  const tabletImageX = useTransform(
+    smoothProgress,
+    [0, 0.4, 0.75, 1],
+    ["0vw", "-6vw", "-16vw", "-16vw"],
+  );
+  const tabletImageY = useTransform(smoothProgress, [0, 0.4, 0.75, 1], [50, -10, 0, 0]);
+  const tabletImageScale = useTransform(
+    smoothProgress,
+    [0, 0.4, 0.75, 1],
+    [1.15, 0.96, 0.78, 0.78],
+  );
+
+  // MOBILE (< 768px): Centered, gliding smoothly upward to showcase face + incoming card
   const mobileImageX = useTransform(
     smoothProgress,
     [0, 0.4, 0.75, 1],
     ["0vw", "0vw", "0vw", "0vw"],
   );
-  const mobileImageY = useTransform(smoothProgress, [0, 0.4, 0.75, 1], [60, -30, -145, -145]);
+  const mobileImageY = useTransform(smoothProgress, [0, 0.4, 0.75, 1], [25, -20, -95, -95]);
   const mobileImageScale = useTransform(
     smoothProgress,
     [0, 0.4, 0.75, 1],
-    [1.15, 0.95, 0.72, 0.72],
+    [1.08, 0.88, 0.68, 0.68],
   );
 
-  const imageX = isMobile ? mobileImageX : desktopImageX;
-  const imageY = isMobile ? mobileImageY : desktopImageY;
-  const imageScale = isMobile ? mobileImageScale : desktopImageScale;
+  const imageX =
+    deviceTier === "desktop"
+      ? desktopImageX
+      : deviceTier === "tablet"
+        ? tabletImageX
+        : mobileImageX;
+
+  const imageY =
+    deviceTier === "desktop"
+      ? desktopImageY
+      : deviceTier === "tablet"
+        ? tabletImageY
+        : mobileImageY;
+
+  const imageScale =
+    deviceTier === "desktop"
+      ? desktopImageScale
+      : deviceTier === "tablet"
+        ? tabletImageScale
+        : mobileImageScale;
 
   // Layer 6: Hero UI elements (Role header, CTA buttons)
   const heroUiOpacity = useTransform(smoothProgress, [0, 0.22], [1, 0]);
   const heroUiY = useTransform(smoothProgress, [0, 0.22], [0, -30]);
   const heroCtaY = useTransform(smoothProgress, [0, 0.22], [0, 30]);
 
-  // Layer 6: Intro Content (animates in from right between 35% and 75%)
+  // Layer 6: Intro Content (animates in between 35% and 75%)
   const introOpacity = useTransform(smoothProgress, [0.35, 0.65], [0, 1]);
-  const introX = useTransform(smoothProgress, [0.35, 0.65], [isMobile ? 0 : 50, 0]);
-  const introY = useTransform(smoothProgress, [0.35, 0.65], [isMobile ? 60 : 20, 0]);
+  const introX = useTransform(
+    smoothProgress,
+    [0.35, 0.65],
+    [deviceTier === "desktop" ? 50 : 0, 0],
+  );
+  const introY = useTransform(
+    smoothProgress,
+    [0.35, 0.65],
+    [deviceTier === "desktop" ? 0 : 35, 0],
+  );
 
   // Progress Bar & Scroll prompt
-  const scrollIndicatorOpacity = useTransform(smoothProgress, [0, 0.15, 0.85, 1], [1, 0.6, 0.6, 0]);
+  const scrollIndicatorOpacity = useTransform(
+    smoothProgress,
+    [0, 0.15, 0.85, 1],
+    [1, 0.6, 0.6, 0],
+  );
 
   return (
-    <section id="hero" ref={containerRef} className="relative h-[300vh] bg-[#030712]">
+    <section id="hero" ref={containerRef} className="relative h-[300vh] bg-[#030712] w-full max-w-[100vw] overflow-x-hidden">
       {/* Pinned Viewport Frame */}
-      <div className="sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden px-6 pt-24 pb-8 sm:px-10 lg:px-16">
+      <div className="sticky top-0 flex h-screen w-full flex-col justify-between overflow-hidden px-4 pt-20 pb-6 sm:px-10 sm:pt-24 sm:pb-8 lg:px-16">
         {/* Layer 1: Dark canvas background with noise & grid */}
         <div className="grid-lines pointer-events-none absolute inset-0 z-[1] opacity-60" />
 
         {/* Layer 2: Decorative Blue Glow & Ambient Aura */}
         <motion.div
           style={{ y: glowY, scale: glowScale, opacity: glowOpacity }}
-          className="pointer-events-none absolute top-1/4 left-1/2 -z-0 h-[60vw] w-[60vw] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(29,78,216,0.38)_0%,_rgba(10,25,47,0.25)_45%,_transparent_75%)] blur-[130px]"
+          className="pointer-events-none absolute top-1/4 left-1/2 -z-0 h-[60vw] w-[60vw] max-w-[800px] max-h-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(29,78,216,0.38)_0%,_rgba(10,25,47,0.25)_45%,_transparent_75%)] blur-[100px] sm:blur-[130px]"
         />
 
         {/* Top Header Information (Hero Phase) */}
         <motion.div
           style={{ y: heroUiY, opacity: heroUiOpacity }}
-          className="relative z-[10] mx-auto flex w-full max-w-[1600px] flex-wrap items-center justify-between gap-4 font-mono text-[10px] tracking-[0.35em] text-muted-foreground uppercase sm:text-xs"
+          className="relative z-[10] mx-auto flex w-full max-w-[1600px] flex-wrap items-center justify-between gap-2 sm:gap-4 font-mono text-[9px] sm:text-xs tracking-[0.18em] sm:tracking-[0.35em] text-muted-foreground uppercase"
         >
-          <div className="flex items-center gap-3">
-            <span className="text-primary font-semibold">{PERSON.role}</span>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-primary font-semibold truncate max-w-[220px] sm:max-w-none">
+              {PERSON.role}
+            </span>
             <span className="hidden h-px w-8 bg-border sm:block" />
-            <span className="hidden sm:inline">{PERSON.location}</span>
+            <span className="hidden md:inline">{PERSON.location}</span>
           </div>
-          <span className="flex items-center gap-2">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-primary shadow-[0_0_10px_#3B82F6]" />
-            Available for opportunities
+          <span className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 animate-pulse rounded-full bg-primary shadow-[0_0_10px_#3B82F6]" />
+            <span className="hidden xs:inline">Available for work</span>
+            <span className="xs:hidden">Available</span>
           </span>
         </motion.div>
 
@@ -126,9 +175,9 @@ export function Hero() {
             {/* Layer 3: Typography Back Layer ("BHOOMI") */}
             <motion.div
               style={{ y: nameBackY, opacity: nameBackOpacity, scale: nameBackScale }}
-              className="relative z-[3] will-change-transform"
+              className="relative z-[3] will-change-transform text-center w-full px-2"
             >
-              <h1 className="font-display text-[17vw] leading-[0.80] tracking-tight text-white uppercase sm:text-[14vw] lg:text-[12vw] drop-shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
+              <h1 className="font-display text-[clamp(3.5rem,14vw,12vw)] leading-[0.82] tracking-tight text-white uppercase drop-shadow-[0_12px_32px_rgba(0,0,0,0.9)]">
                 {PERSON.heroFirstName}
               </h1>
             </motion.div>
@@ -136,9 +185,9 @@ export function Hero() {
             {/* Layer 5: Typography Front Layer ("JAKKANNAVAR") */}
             <motion.div
               style={{ y: nameFrontY, opacity: nameFrontOpacity, scale: nameFrontScale }}
-              className="relative z-[6] -mt-[2vw] will-change-transform"
+              className="relative z-[6] -mt-[1.5vw] sm:-mt-[2vw] will-change-transform text-center w-full px-2"
             >
-              <h1 className="text-stroke font-display text-[15vw] leading-[0.80] tracking-tight uppercase sm:text-[13vw] lg:text-[10.5vw] drop-shadow-[0_16px_40px_rgba(0,0,0,0.95)]">
+              <h1 className="text-stroke font-display text-[clamp(2.1rem,9.8vw,10.5vw)] leading-[0.82] tracking-tighter uppercase drop-shadow-[0_16px_40px_rgba(0,0,0,0.95)]">
                 {PERSON.heroLastName}
               </h1>
             </motion.div>
@@ -156,10 +205,10 @@ export function Hero() {
             className="pointer-events-none absolute z-[5] flex items-center justify-center will-change-transform"
           >
             {/* Subtle blue rim aura behind the profile */}
-            <div className="pointer-events-none absolute h-[115%] w-[115%] rounded-full bg-[radial-gradient(ellipse_at_center,_rgba(29,78,216,0.35)_0%,_rgba(59,130,246,0.15)_45%,_transparent_72%)] blur-[70px]" />
+            <div className="pointer-events-none absolute h-[115%] w-[115%] rounded-full bg-[radial-gradient(ellipse_at_center,_rgba(29,78,216,0.35)_0%,_rgba(59,130,246,0.15)_45%,_transparent_72%)] blur-[50px] sm:blur-[70px]" />
 
-            {/* Transparent Cutout Image Structure - Easy replacement with user portrait */}
-            <div className="relative h-[420px] w-[310px] sm:h-[540px] sm:w-[400px] md:h-[620px] md:w-[460px] lg:h-[720px] lg:w-[530px] xl:h-[780px] xl:w-[580px]">
+            {/* Transparent Cutout Image Structure - Fluid Responsive Sizing */}
+            <div className="relative w-[min(280px,76vw)] h-[min(380px,46vh)] sm:h-[480px] sm:w-[350px] md:h-[580px] md:w-[420px] lg:h-[720px] lg:w-[530px] xl:h-[780px] xl:w-[580px]">
               <img
                 src={profileCutout}
                 alt={PERSON.name}
@@ -169,12 +218,12 @@ export function Hero() {
                 className="h-full w-full object-contain object-bottom filter contrast-[1.05] brightness-[0.98] drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]"
               />
               {/* Soft bottom edge fade so torso blends seamlessly into the dark background */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#030712] via-[#030712]/70 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 sm:h-32 bg-gradient-to-t from-[#030712] via-[#030712]/70 to-transparent" />
             </div>
           </motion.div>
 
           {/* ========================================================================= */}
-          {/* Layer 6: INTRO PHASE CONTENT (Animates in from right side on Desktop) */}
+          {/* Layer 6: INTRO PHASE CONTENT (Animates in on Desktop right side, Mobile center) */}
           {/* ========================================================================= */}
           <motion.div
             style={{
@@ -182,15 +231,15 @@ export function Hero() {
               x: introX,
               y: introY,
             }}
-            className="relative z-[10] ml-auto w-full lg:w-[54%] xl:w-[50%]"
+            className="relative z-[10] ml-auto w-full max-w-[96vw] lg:w-[54%] xl:w-[50%]"
           >
-            <div className="rounded-2xl border border-primary/20 bg-[#0A192F]/85 p-6 sm:p-8 lg:p-10 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(2,12,27,0.9)]">
-              <div className="flex items-center gap-3 font-mono text-xs tracking-[0.3em] text-primary uppercase">
-                <span className="h-px w-8 bg-primary shadow-[0_0_10px_#3B82F6]" />
+            <div className="rounded-xl sm:rounded-2xl border border-primary/20 bg-[#0A192F]/90 p-4 sm:p-8 lg:p-10 backdrop-blur-xl shadow-[0_20px_60px_-15px_rgba(2,12,27,0.9)] max-h-[75vh] overflow-y-auto">
+              <div className="flex items-center gap-2 sm:gap-3 font-mono text-[10px] sm:text-xs tracking-[0.25em] text-primary uppercase">
+                <span className="h-px w-6 sm:w-8 bg-primary shadow-[0_0_10px_#3B82F6]" />
                 01 — Intro & Background
               </div>
 
-              <h2 className="mt-4 font-display text-3xl leading-[0.95] tracking-tight text-white uppercase sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 font-display text-2xl leading-[0.95] tracking-tight text-white uppercase sm:text-4xl lg:text-5xl">
                 Aspiring Software Engineer
                 <br />
                 <span className="text-primary drop-shadow-[0_0_24px_rgba(59,130,246,0.6)]">
@@ -198,26 +247,26 @@ export function Hero() {
                 </span>
               </h2>
 
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
+              <p className="mt-3 text-xs leading-relaxed text-muted-foreground sm:text-base lg:text-lg">
                 {PERSON.intro}
               </p>
 
               {/* What I'm Passionate About Grid */}
-              <div className="mt-6">
-                <div className="mb-3 flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] text-primary uppercase">
+              <div className="mt-4 sm:mt-6">
+                <div className="mb-2 sm:mb-3 flex items-center gap-2 font-mono text-[9px] sm:text-[10px] tracking-[0.2em] text-primary uppercase">
                   <span>What I&apos;m passionate about</span>
                   <span className="h-px flex-1 bg-border/60" />
                 </div>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 sm:grid-cols-4">
                   {PERSON.passions.map((item) => (
                     <div
                       key={item.value}
-                      className="group rounded-lg border border-primary/25 bg-[#020C1B]/80 p-3 sm:p-4 backdrop-blur transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
+                      className="group rounded-lg border border-primary/25 bg-[#020C1B]/80 p-2 sm:p-4 backdrop-blur transition-all duration-300 hover:border-primary hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]"
                     >
-                      <div className="font-display text-2xl tracking-tight text-primary drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] sm:text-3xl">
+                      <div className="font-display text-lg tracking-tight text-primary drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] sm:text-2xl lg:text-3xl">
                         {item.value}
                       </div>
-                      <div className="mt-1 font-mono text-[9px] tracking-wider text-muted-foreground uppercase transition-colors group-hover:text-foreground/90 sm:text-[10px]">
+                      <div className="mt-0.5 sm:mt-1 font-mono text-[8px] tracking-wider text-muted-foreground uppercase transition-colors group-hover:text-foreground/90 sm:text-[10px]">
                         {item.label}
                       </div>
                     </div>
@@ -226,17 +275,17 @@ export function Hero() {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-8 flex flex-wrap items-center gap-4">
+              <div className="mt-5 sm:mt-8 flex flex-wrap items-center gap-2.5 sm:gap-4">
                 <a
                   href="#projects"
-                  className="group relative overflow-hidden rounded-full bg-primary px-7 py-3.5 font-mono text-[11px] tracking-[0.22em] text-white uppercase shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all hover:bg-blue-600 hover:shadow-[0_0_35px_rgba(59,130,246,0.7)]"
+                  className="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-primary px-5 py-2.5 sm:px-7 sm:py-3.5 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-white uppercase shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all hover:bg-blue-600 hover:shadow-[0_0_35px_rgba(59,130,246,0.7)] min-h-[42px]"
                 >
                   <span className="relative z-10">View selected work</span>
                   <span className="absolute inset-0 origin-left scale-x-0 bg-white/20 transition-transform duration-500 group-hover:scale-x-100" />
                 </a>
                 <a
                   href="#contact"
-                  className="rounded-full border border-primary/40 px-7 py-3.5 font-mono text-[11px] tracking-[0.22em] text-white uppercase transition-colors hover:border-primary hover:text-primary hover:bg-primary/10"
+                  className="inline-flex items-center justify-center rounded-full border border-primary/40 px-5 py-2.5 sm:px-7 sm:py-3.5 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-white uppercase transition-colors hover:border-primary hover:text-primary hover:bg-primary/10 min-h-[42px]"
                 >
                   Get in touch
                 </a>
@@ -246,26 +295,26 @@ export function Hero() {
         </div>
 
         {/* Bottom Hero UI & Transition Progress Bar */}
-        <div className="relative z-[10] mx-auto flex w-full max-w-[1600px] flex-col gap-4">
+        <div className="relative z-[10] mx-auto flex w-full max-w-[1600px] flex-col gap-2.5 sm:gap-4">
           {/* Initial Hero Action Buttons (Fade out as scroll begins) */}
           <motion.div
             style={{ opacity: heroUiOpacity, y: heroCtaY }}
-            className="flex flex-wrap items-center justify-between gap-4"
+            className="flex flex-wrap items-center justify-between gap-3 sm:gap-4"
           >
-            <div className="hidden max-w-md text-sm text-muted-foreground sm:block">
+            <div className="hidden max-w-md text-xs text-muted-foreground md:block">
               {PERSON.tagline}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2.5 sm:gap-4 w-full sm:w-auto justify-between sm:justify-start">
               <a
                 href="#projects"
-                className="group relative overflow-hidden rounded-full bg-primary px-7 py-3 font-mono text-[11px] tracking-[0.25em] text-white uppercase shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all hover:shadow-[0_0_35px_rgba(59,130,246,0.7)]"
+                className="group relative flex-1 sm:flex-none text-center inline-flex items-center justify-center overflow-hidden rounded-full bg-primary px-5 py-2.5 sm:px-7 sm:py-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-white uppercase shadow-[0_0_25px_rgba(59,130,246,0.4)] transition-all hover:shadow-[0_0_35px_rgba(59,130,246,0.7)] min-h-[42px]"
               >
                 <span className="relative z-10">Explore work</span>
                 <span className="absolute inset-0 origin-left scale-x-0 bg-white/20 transition-transform duration-500 group-hover:scale-x-100" />
               </a>
               <a
                 href="#contact"
-                className="rounded-full border border-primary/40 px-7 py-3 font-mono text-[11px] tracking-[0.25em] text-white uppercase transition-colors hover:border-primary hover:text-primary hover:bg-primary/10"
+                className="flex-1 sm:flex-none text-center inline-flex items-center justify-center rounded-full border border-primary/40 px-5 py-2.5 sm:px-7 sm:py-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] text-white uppercase transition-colors hover:border-primary hover:text-primary hover:bg-primary/10 min-h-[42px]"
               >
                 Contact
               </a>
@@ -275,17 +324,17 @@ export function Hero() {
           {/* Persistent Scroll Progress Bar */}
           <motion.div
             style={{ opacity: scrollIndicatorOpacity }}
-            className="flex items-center justify-between border-t border-primary/20 pt-4 font-mono text-[10px] tracking-[0.25em] text-muted-foreground uppercase"
+            className="flex items-center justify-between border-t border-primary/20 pt-2.5 sm:pt-4 font-mono text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.25em] text-muted-foreground uppercase"
           >
             <span className="flex items-center gap-2">
               <motion.span
                 animate={{ y: [0, 4, 0] }}
                 transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
-                className="inline-block h-4 w-px bg-primary shadow-[0_0_8px_#3B82F6]"
+                className="inline-block h-3.5 sm:h-4 w-px bg-primary shadow-[0_0_8px_#3B82F6]"
               />
               Scroll to transform
             </span>
-            <span>Hero &rarr; Intro Experience</span>
+            <span className="hidden xs:inline">Hero &rarr; Intro Experience</span>
           </motion.div>
         </div>
       </div>
