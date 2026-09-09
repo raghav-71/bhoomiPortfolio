@@ -1,7 +1,16 @@
+import { motion } from "motion/react";
 import { GraduationCap, Calendar, Award, MapPin } from "lucide-react";
 
 import { EDUCATION } from "@/lib/portfolio-data";
-import { Reveal, SectionHeading } from "./Reveal";
+import {
+  syncContainerVariants,
+  syncDescVariants,
+  syncNameVariants,
+  syncTagItemVariants,
+  syncTagListVariants,
+  syncTitleVariants,
+} from "@/lib/animations";
+import { SectionHeading } from "./Reveal";
 
 export function Education() {
   return (
@@ -15,62 +24,82 @@ export function Education() {
           lead="Academic foundation and continuous technical learning in computer applications and software development."
         />
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={syncContainerVariants}
+          className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14"
+        >
           {/* Main Degree Card */}
-          <Reveal>
-            <div className="h-full rounded-xl sm:rounded-2xl border border-primary/25 bg-[#0A192F]/85 p-5 sm:p-8 lg:p-12 backdrop-blur-md relative overflow-hidden transition-all duration-500 hover:border-primary/50 shadow-[0_15px_40px_-10px_rgba(2,12,27,0.8)]">
-              <div className="flex items-center gap-2 sm:gap-3 font-mono text-[10px] sm:text-xs tracking-[0.25em] text-primary uppercase">
-                <GraduationCap className="h-4 w-4 shrink-0" />
-                <span>Undergraduate Degree</span>
-              </div>
+          <motion.div
+            variants={syncDescVariants}
+            className="h-full rounded-xl sm:rounded-2xl border border-primary/25 bg-[#0A192F]/85 p-5 sm:p-8 lg:p-12 backdrop-blur-md relative overflow-hidden transition-all duration-500 hover:border-primary/50 shadow-[0_15px_40px_-10px_rgba(2,12,27,0.8)]"
+          >
+            <motion.div
+              variants={syncNameVariants}
+              className="flex items-center gap-2 sm:gap-3 font-mono text-[10px] sm:text-xs tracking-[0.25em] text-primary uppercase"
+            >
+              <GraduationCap className="h-4 w-4 shrink-0" />
+              <span>Undergraduate Degree</span>
+            </motion.div>
 
-              <h3 className="mt-3 sm:mt-4 font-sans text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white">
-                {EDUCATION.degree}
-              </h3>
+            <motion.h3
+              variants={syncTitleVariants}
+              className="mt-3 sm:mt-4 font-sans text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white"
+            >
+              {EDUCATION.degree}
+            </motion.h3>
 
-              <div className="mt-2.5 sm:mt-3 flex flex-wrap items-center gap-2 text-sm sm:text-base text-muted-foreground">
-                <span className="text-foreground/90 font-medium">{EDUCATION.college}</span>
-                <span>•</span>
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                  {EDUCATION.location}
-                </span>
-              </div>
-
-              <p className="mt-4 sm:mt-6 text-xs sm:text-sm lg:text-base leading-relaxed text-muted-foreground">
-                Pursuing rigorous foundational education in computer science, software design, and
-                modern development paradigms. Actively connecting academic coursework with hands-on
-                collaborative web platforms and artificial intelligence projects.
-              </p>
-
-              <div className="mt-6 sm:mt-8 border-t border-primary/20 pt-5 sm:pt-6">
-                <div className="font-mono text-[10px] sm:text-xs tracking-wider text-muted-foreground uppercase font-semibold">
-                  Academic Focus & Coursework
-                </div>
-                <div className="mt-3 flex flex-wrap gap-1.5 sm:gap-2">
-                  {[
-                    "Data Structures",
-                    "Java Programming",
-                    "Database Management (SQL)",
-                    "Web Technologies",
-                    "Python",
-                    "Software Engineering",
-                  ].map((item) => (
-                    <span
-                      key={item}
-                      className="rounded-full border border-primary/20 bg-[#020C1B]/80 px-2.5 py-1 sm:px-3.5 sm:py-1.5 font-mono text-[10px] sm:text-[11px] tracking-wider text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-                    >
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            <div className="mt-2.5 sm:mt-3 flex flex-wrap items-center gap-2 text-sm sm:text-base text-muted-foreground">
+              <span className="text-foreground/90 font-medium">{EDUCATION.college}</span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
+                {EDUCATION.location}
+              </span>
             </div>
-          </Reveal>
+
+            <p className="mt-4 sm:mt-6 text-xs sm:text-sm lg:text-base leading-relaxed text-muted-foreground">
+              Pursuing rigorous foundational education in computer science, software design, and
+              modern development paradigms. Actively connecting academic coursework with hands-on
+              collaborative web platforms and artificial intelligence projects.
+            </p>
+
+            <div className="mt-6 sm:mt-8 border-t border-primary/20 pt-5 sm:pt-6">
+              <div className="font-mono text-[10px] sm:text-xs tracking-wider text-muted-foreground uppercase font-semibold">
+                Academic Focus & Coursework
+              </div>
+              <motion.div
+                variants={syncTagListVariants}
+                className="mt-3 flex flex-wrap gap-1.5 sm:gap-2"
+              >
+                {[
+                  "Data Structures",
+                  "Java Programming",
+                  "Database Management (SQL)",
+                  "Web Technologies",
+                  "Python",
+                  "Software Engineering",
+                ].map((item) => (
+                  <motion.span
+                    key={item}
+                    variants={syncTagItemVariants}
+                    className="rounded-full border border-primary/20 bg-[#020C1B]/80 px-2.5 py-1 sm:px-3.5 sm:py-1.5 font-mono text-[10px] sm:text-[11px] tracking-wider text-muted-foreground transition-colors hover:border-primary hover:text-primary"
+                  >
+                    {item}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </div>
+          </motion.div>
 
           {/* Key Metrics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px overflow-hidden rounded-xl sm:rounded-2xl bg-border border border-primary/20">
-            <Reveal delay={0.08} className="h-full">
+          <motion.div
+            variants={syncTagListVariants}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-px overflow-hidden rounded-xl sm:rounded-2xl bg-border border border-primary/20"
+          >
+            <motion.div variants={syncTagItemVariants} className="h-full">
               <div className="h-full bg-[#0A192F] p-5 sm:p-8 transition-colors duration-500 hover:bg-[#112240]">
                 <div className="flex items-center gap-2 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.25em] text-primary uppercase">
                   <Calendar className="h-3.5 w-3.5 shrink-0" />
@@ -83,9 +112,9 @@ export function Education() {
                   Final Year BCA Candidate
                 </div>
               </div>
-            </Reveal>
+            </motion.div>
 
-            <Reveal delay={0.14} className="h-full">
+            <motion.div variants={syncTagItemVariants} className="h-full">
               <div className="h-full bg-[#0A192F] p-5 sm:p-8 transition-colors duration-500 hover:bg-[#112240]">
                 <div className="flex items-center gap-2 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.25em] text-primary uppercase">
                   <Award className="h-3.5 w-3.5 shrink-0" />
@@ -98,9 +127,9 @@ export function Education() {
                   Consistent Academic Performance
                 </div>
               </div>
-            </Reveal>
+            </motion.div>
 
-            <Reveal delay={0.2} className="h-full">
+            <motion.div variants={syncTagItemVariants} className="h-full">
               <div className="h-full bg-[#0A192F] p-5 sm:p-8 transition-colors duration-500 hover:bg-[#112240]">
                 <div className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.25em] text-primary uppercase">
                   Institution
@@ -112,9 +141,9 @@ export function Education() {
                   Belagavi, Karnataka
                 </div>
               </div>
-            </Reveal>
+            </motion.div>
 
-            <Reveal delay={0.26} className="h-full">
+            <motion.div variants={syncTagItemVariants} className="h-full">
               <div className="h-full bg-[#0A192F] p-5 sm:p-8 transition-colors duration-500 hover:bg-[#112240]">
                 <div className="font-mono text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.25em] text-primary uppercase">
                   Career Trajectory
@@ -123,12 +152,12 @@ export function Education() {
                   Software Developer
                 </div>
                 <div className="mt-1 font-mono text-[9px] sm:text-[10px] tracking-wider text-muted-foreground uppercase">
-                  Full Stack & AI Ready
+                  Full Stack & AI Platforms
                 </div>
               </div>
-            </Reveal>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

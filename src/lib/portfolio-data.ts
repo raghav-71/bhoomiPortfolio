@@ -1,7 +1,6 @@
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
-import project4 from "@/assets/project-4.jpg";
 
 /**
  * =========================================================================
@@ -29,7 +28,7 @@ export const PERSON = {
   degree: "Bachelor of Computer Applications",
   location: "Belagavi, Karnataka",
   graduationYear: "May 2027",
-  cgpa: "7.44",
+  cgpa: "8.20",
 
   // Contact Information (Easily editable placeholders)
   email: "bhoomi.jakkannavar@gmail.com",
@@ -67,8 +66,8 @@ export const PERSON = {
   // Stats / Metric Badges
   stats: [
     { value: "2027", label: "Expected Graduation" },
-    { value: "7.44", label: "Academic CGPA" },
-    { value: "04", label: "Co-Developed Projects" },
+    { value: "8.20", label: "Academic CGPA" },
+    { value: "03", label: "Co-Developed Projects" },
     { value: "BCA", label: "Belagavi, Karnataka" },
   ],
 
@@ -225,34 +224,6 @@ export const PROJECTS: Project[] = [
     href: "#projects",
     github: "https://github.com/bhoomi-jakkannavar",
   },
-  {
-    id: "fitverse-ai",
-    index: "04",
-    title: "FITVERSE AI",
-    category: "AI-Powered Fitness & Health Platform",
-    collaboration: "Collaboratively developed project",
-    year: "2026",
-    summary:
-      "A collaborative AI-powered fitness platform designed to help users manage workouts, diet, health tracking, and personalized fitness goals.",
-    description:
-      "FitVerse AI harnesses machine intelligence to construct customized workout routines, track macronutrients and dietary habits, and generate actionable health analytics for every fitness journey.",
-    problem:
-      "Generic fitness plans fail to adapt to individual body metrics, dietary restrictions, and busy student/work schedules, leading to low adherence and plateaus.",
-    solution:
-      "An adaptive fitness companion leveraging intelligent APIs to provide personalized workout schedules, automated dietary monitoring, interactive health metrics, and motivational insights.",
-    features: [
-      "🤖 AI Fitness Assistant",
-      "🏋️ Personalized Workout Plans",
-      "🥗 Diet Tracking",
-      "📊 Progress Analytics",
-      "🎯 Personalized Recommendations",
-      "📅 Daily Health Tracking",
-    ],
-    tech: ["React", "JavaScript", "AI APIs", "Web Technologies"],
-    image: project4,
-    href: "#projects",
-    github: "https://github.com/bhoomi-jakkannavar",
-  },
 ];
 
 export const AI_CAPABILITIES = [
@@ -274,7 +245,7 @@ export const AI_CAPABILITIES = [
   {
     code: "AI/04",
     title: "Practical Problem Solving",
-    body: "Transforming real-world challenges into functional AI applications — from automated fraud detection in Scam Handling to smart study tools in Campus OS and fitness intelligence.",
+    body: "Transforming real-world challenges into functional AI applications — from automated fraud detection in Scam Handling to smart study tools in Campus OS and location intelligence.",
   },
 ];
 
@@ -295,7 +266,7 @@ export const JOURNEY = [
     year: "2026",
     role: "Collaborative Projects & AI Platforms",
     org: "Development Team Collaborator",
-    body: "Started collaboratively building real-world projects and AI-powered applications. Worked on projects including Scam Handling, Campus OS, Location Tracker, and FitVerse AI.",
+    body: "Started collaboratively building real-world projects and AI-powered applications. Worked on projects including Scam Handling, Campus OS, and Location Tracker.",
   },
   {
     year: "2027",
@@ -310,11 +281,11 @@ export const EDUCATION = {
   college: "Bharatesh College of Computer Applications",
   location: "Belagavi, Karnataka",
   graduation: "May 2027",
-  cgpa: "7.44",
+  cgpa: "8.20",
   highlights: [
     "Core studies in Software Development, Database Management (SQL), Data Structures, and Web Technologies",
     "Continuous practical learning in Artificial Intelligence, Modern Frontend Frameworks, and Node.js APIs",
-    "Collaborative development of real-world platforms including Scam Handling, Campus OS, and FitVerse AI",
+    "Collaborative development of real-world platforms including Scam Handling, Campus OS, and Location Tracker",
   ],
 };
 

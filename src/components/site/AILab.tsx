@@ -1,7 +1,13 @@
 import { motion } from "motion/react";
 
 import { AI_CAPABILITIES } from "@/lib/portfolio-data";
-import { Reveal, SectionHeading } from "./Reveal";
+import {
+  syncContainerVariants,
+  syncNameVariants,
+  syncTagItemVariants,
+  syncTitleVariants,
+} from "@/lib/animations";
+import { SectionHeading } from "./Reveal";
 
 export function AILab() {
   return (
@@ -16,28 +22,40 @@ export function AILab() {
           lead="AI is a core dimension of modern software engineering. I design reliable prompt pipelines, evaluation paths, and API integrations that make web platforms intelligent and dependable."
         />
 
-        <div className="grid gap-px overflow-hidden rounded-xl sm:rounded-2xl bg-border border border-primary/20 md:grid-cols-2">
-          {AI_CAPABILITIES.map((cap, i) => (
-            <Reveal key={cap.code} delay={i * 0.07}>
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={syncContainerVariants}
+          className="grid gap-px overflow-hidden rounded-xl sm:rounded-2xl bg-border border border-primary/20 md:grid-cols-2"
+        >
+          {AI_CAPABILITIES.map((cap) => (
+            <motion.div
+              key={cap.code}
+              variants={syncTagItemVariants}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              className="group h-full bg-[#0A192F] p-5 sm:p-8 lg:p-12 hover:bg-[#112240] transition-colors duration-500"
+            >
               <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                className="group h-full bg-[#0A192F] p-5 sm:p-8 lg:p-12 hover:bg-[#112240] transition-colors duration-500"
+                variants={syncNameVariants}
+                className="flex items-center justify-between font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-primary uppercase"
               >
-                <div className="flex items-center justify-between font-mono text-[9px] sm:text-[10px] tracking-[0.25em] text-primary uppercase">
-                  <span>{cap.code}</span>
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_6px_#3B82F6] opacity-40 transition-opacity duration-500 group-hover:opacity-100" />
-                </div>
-                <h3 className="mt-4 sm:mt-6 font-display text-xl tracking-tight uppercase sm:text-2xl lg:text-3xl text-white">
-                  {cap.title}
-                </h3>
-                <p className="mt-3 sm:mt-4 text-xs sm:text-sm lg:text-base leading-relaxed text-muted-foreground">
-                  {cap.body}
-                </p>
+                <span>{cap.code}</span>
+                <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_6px_#3B82F6] opacity-40 transition-opacity duration-500 group-hover:opacity-100" />
               </motion.div>
-            </Reveal>
+              <motion.h3
+                variants={syncTitleVariants}
+                className="mt-4 sm:mt-6 font-display text-xl tracking-tight uppercase sm:text-2xl lg:text-3xl text-white"
+              >
+                {cap.title}
+              </motion.h3>
+              <p className="mt-3 sm:mt-4 text-xs sm:text-sm lg:text-base leading-relaxed text-muted-foreground">
+                {cap.body}
+              </p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

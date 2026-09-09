@@ -1,9 +1,17 @@
 import { useState } from "react";
+import { motion } from "motion/react";
 import { toast } from "sonner";
 import { Mail, Linkedin, Github, Instagram } from "lucide-react";
 
 import { PERSON } from "@/lib/portfolio-data";
-import { Reveal } from "./Reveal";
+import {
+  syncContainerVariants,
+  syncDescVariants,
+  syncNameVariants,
+  syncTagItemVariants,
+  syncTagListVariants,
+  syncTitleVariants,
+} from "@/lib/animations";
 
 export function Contact() {
   const [sending, setSending] = useState(false);
@@ -49,28 +57,35 @@ export function Contact() {
     <section id="contact" className="relative overflow-hidden px-4 py-20 sm:px-10 sm:py-36 w-full max-w-[100vw]">
       <div className="pointer-events-none absolute -top-1/4 right-0 h-[50vw] w-[50vw] max-w-[600px] max-h-[600px] rounded-full bg-[radial-gradient(circle,_rgba(29,78,216,0.18)_0%,_transparent_70%)] blur-[100px] sm:blur-[150px]" />
       <div className="relative mx-auto max-w-[1600px]">
-        <Reveal>
-          <div className="flex items-center gap-2.5 sm:gap-3 font-mono text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] text-primary uppercase">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={syncContainerVariants}
+        >
+          <motion.div
+            variants={syncNameVariants}
+            className="flex items-center gap-2.5 sm:gap-3 font-mono text-[10px] sm:text-xs tracking-[0.25em] sm:tracking-[0.3em] text-primary uppercase"
+          >
             <span className="h-px w-6 sm:w-8 bg-primary shadow-[0_0_8px_#3B82F6]" />
             07 — Contact
-          </div>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <h2 className="mt-4 sm:mt-6 font-display text-[clamp(2.4rem,9.5vw,8.5vw)] leading-[0.88] tracking-tight uppercase text-white">
+          </motion.div>
+
+          <motion.h2
+            variants={syncTitleVariants}
+            className="mt-4 sm:mt-6 font-display text-[clamp(2.4rem,9.5vw,8.5vw)] leading-[0.88] tracking-tight uppercase text-white"
+          >
             Let&apos;s connect
             <span className="block text-stroke">& build</span>
-          </h2>
-        </Reveal>
+          </motion.h2>
 
-        <div className="mt-10 sm:mt-16 grid gap-10 sm:gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-24 items-start">
-          <div className="space-y-6 sm:space-y-10">
-            <Reveal>
+          <div className="mt-10 sm:mt-16 grid gap-10 sm:gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-24 items-start">
+            <motion.div variants={syncDescVariants} className="space-y-6 sm:space-y-10">
               <p className="max-w-md text-sm sm:text-base lg:text-lg leading-relaxed text-muted-foreground">
                 Looking for an ambitious Software Engineer and Full Stack Developer with hands-on
                 experience in modern web applications and AI integration? I&apos;d love to connect.
               </p>
-            </Reveal>
-            <Reveal delay={0.08}>
+
               <div className="rounded-xl border border-primary/20 bg-[#0A192F]/60 p-4 sm:p-6 backdrop-blur">
                 <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] text-primary uppercase">
                   Direct Email
@@ -82,16 +97,19 @@ export function Contact() {
                   {PERSON.email}
                 </a>
               </div>
-            </Reveal>
-            <Reveal delay={0.14}>
+
               <div>
                 <div className="font-mono text-[9px] sm:text-[10px] tracking-[0.25em] sm:tracking-[0.3em] text-muted-foreground uppercase font-semibold">
                   Online Profiles & Socials
                 </div>
-                <div className="mt-3 sm:mt-4 flex flex-wrap gap-2.5 sm:gap-3">
+                <motion.div
+                  variants={syncTagListVariants}
+                  className="mt-3 sm:mt-4 flex flex-wrap gap-2.5 sm:gap-3"
+                >
                   {PERSON.socials.map((s) => (
-                    <a
+                    <motion.a
                       key={s.label}
+                      variants={syncTagItemVariants}
                       href={s.href}
                       target="_blank"
                       rel="noreferrer"
@@ -99,15 +117,16 @@ export function Contact() {
                     >
                       {getSocialIcon(s.label)}
                       <span>{s.label}</span>
-                    </a>
+                    </motion.a>
                   ))}
-                </div>
+                </motion.div>
               </div>
-            </Reveal>
-          </div>
+            </motion.div>
 
-          <Reveal delay={0.1}>
-            <div className="rounded-xl sm:rounded-2xl border border-primary/20 bg-[#0A192F]/70 p-4 sm:p-8 lg:p-10 backdrop-blur-xl shadow-[0_20px_50px_-10px_rgba(2,12,27,0.9)]">
+            <motion.div
+              variants={syncDescVariants}
+              className="rounded-xl sm:rounded-2xl border border-primary/20 bg-[#0A192F]/70 p-4 sm:p-8 lg:p-10 backdrop-blur-xl shadow-[0_20px_50px_-10px_rgba(2,12,27,0.9)]"
+            >
               <form onSubmit={onSubmit} className="space-y-5 sm:space-y-8">
                 <div className="grid gap-5 sm:gap-8 sm:grid-cols-2">
                   <input required name="name" placeholder="Your name" className={field} />
@@ -136,9 +155,9 @@ export function Contact() {
                   <span className="absolute inset-0 origin-left scale-x-0 bg-[#020C1B] transition-transform duration-500 group-hover:scale-x-100" />
                 </button>
               </form>
-            </div>
-          </Reveal>
-        </div>
+            </motion.div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

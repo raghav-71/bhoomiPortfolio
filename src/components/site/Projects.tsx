@@ -10,6 +10,16 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PROJECTS, type Project } from "@/lib/portfolio-data";
+import {
+  syncButtonVariants,
+  syncContainerVariants,
+  syncDescVariants,
+  syncImageVariants,
+  syncNameVariants,
+  syncTagItemVariants,
+  syncTagListVariants,
+  syncTitleVariants,
+} from "@/lib/animations";
 import { SectionHeading } from "./Reveal";
 
 function ProjectRow({
@@ -27,15 +37,17 @@ function ProjectRow({
   const flip = i % 2 === 1;
 
   return (
-    <article
+    <motion.article
       ref={ref}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.15 }}
+      variants={syncContainerVariants}
       className="grid items-center gap-8 border-b border-border py-12 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:py-24"
     >
+      {/* 0.0s — Project Image (fade-in + subtle scale & slide-up) */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        variants={syncImageVariants}
         className={`group relative overflow-hidden rounded-xl border border-primary/20 bg-surface w-full ${flip ? "lg:order-2" : ""}`}
       >
         <div className="aspect-16/10 overflow-hidden bg-[#020C1B] w-full">
@@ -63,57 +75,75 @@ function ProjectRow({
         </div>
       </motion.div>
 
+      {/* Synchronized Information Column */}
       <div className={flip ? "lg:order-1" : ""}>
-        <div className="flex items-center gap-2.5 sm:gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.25em] text-muted-foreground uppercase">
+        {/* 0.1s — Category / Index Badge */}
+        <motion.div
+          variants={syncNameVariants}
+          className="flex items-center gap-2.5 sm:gap-3 font-mono text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.25em] text-muted-foreground uppercase"
+        >
           <span className="text-primary font-semibold">{project.index}</span>
           <span className="h-px w-6 sm:w-8 bg-border" />
           <span className="truncate">{project.category}</span>
-        </div>
+        </motion.div>
 
-        <h3 className="mt-3 sm:mt-4 font-display text-3xl leading-[0.95] tracking-tight uppercase sm:text-5xl lg:text-6xl text-white">
-          {project.title}
-        </h3>
+        {/* 0.28s — Project Title & Subtitle */}
+        <motion.div variants={syncTitleVariants}>
+          <h3 className="mt-3 sm:mt-4 font-display text-3xl leading-[0.95] tracking-tight uppercase sm:text-5xl lg:text-6xl text-white">
+            {project.title}
+          </h3>
+          <div className="mt-2 flex items-center gap-2 font-mono text-[11px] sm:text-xs text-primary/90">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+            <span>{project.collaboration}</span>
+          </div>
+        </motion.div>
 
-        <div className="mt-2 flex items-center gap-2 font-mono text-[11px] sm:text-xs text-primary/90">
-          <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
-          <span>{project.collaboration}</span>
-        </div>
-
-        <p className="mt-3 sm:mt-4 text-sm leading-relaxed text-foreground/85 sm:text-base lg:text-lg">
+        {/* 0.44s — Description */}
+        <motion.p
+          variants={syncDescVariants}
+          className="mt-3 sm:mt-4 text-sm leading-relaxed text-foreground/85 sm:text-base lg:text-lg"
+        >
           {project.summary}
-        </p>
+        </motion.p>
 
-        {/* Feature preview chips */}
-        <div className="mt-4 sm:mt-5 flex flex-wrap gap-1.5 sm:gap-2">
+        {/* 0.58s — Features & Tech Badges (Staggered items) */}
+        <motion.div
+          variants={syncTagListVariants}
+          className="mt-4 sm:mt-5 flex flex-wrap gap-1.5 sm:gap-2"
+        >
           {project.features.slice(0, 3).map((f) => (
-            <span
+            <motion.span
               key={f}
+              variants={syncTagItemVariants}
               className="rounded-full border border-primary/25 bg-[#0A192F]/80 px-2.5 py-1 sm:px-3 sm:py-1 font-mono text-[9px] sm:text-[10px] tracking-wider text-muted-foreground"
             >
               {f}
-            </span>
+            </motion.span>
           ))}
           {project.features.length > 3 && (
-            <span className="rounded-full border border-border bg-[#020C1B]/60 px-2.5 py-1 sm:px-3 sm:py-1 font-mono text-[9px] sm:text-[10px] tracking-wider text-muted-foreground/70">
+            <motion.span
+              variants={syncTagItemVariants}
+              className="rounded-full border border-border bg-[#020C1B]/60 px-2.5 py-1 sm:px-3 sm:py-1 font-mono text-[9px] sm:text-[10px] tracking-wider text-muted-foreground/70"
+            >
               +{project.features.length - 3} more
-            </span>
+            </motion.span>
           )}
-        </div>
-
-        {/* Tech badges */}
-        <div className="mt-3 sm:mt-4 flex flex-wrap gap-1.5 sm:gap-2">
           {project.tech.map((t) => (
-            <span
+            <motion.span
               key={t}
+              variants={syncTagItemVariants}
               className="rounded-full border border-primary/20 bg-surface-2/60 px-2.5 py-1 sm:px-3 sm:py-1.5 font-mono text-[9px] sm:text-[10px] tracking-wider text-muted-foreground"
             >
               {t}
-            </span>
+            </motion.span>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Action buttons - full-width stackable on mobile, inline on desktop */}
-        <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+        {/* 0.72s — Action Buttons */}
+        <motion.div
+          variants={syncButtonVariants}
+          className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
+        >
           <button
             type="button"
             onClick={() => onSelectProject(project)}
@@ -128,11 +158,12 @@ function ProjectRow({
             rel="noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/40 px-6 py-3 font-mono text-[11px] tracking-[0.2em] text-white uppercase transition-colors hover:border-primary hover:text-primary hover:bg-primary/10 min-h-[44px]"
           >
-            <span>GitHub ↗</span>
+            <Github className="h-4 w-4" />
+            Code Repository
           </a>
-        </div>
+        </motion.div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
